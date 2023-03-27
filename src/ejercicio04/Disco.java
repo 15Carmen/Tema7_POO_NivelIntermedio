@@ -12,19 +12,19 @@ public class Disco {
     /**
      * Atributo donde guardaremos el autor del disco
      */
-    String autor;
+    String autor = "";
     /**
      * Atributo donde guardaremos el título del disco
      */
-    String titulo;
+    String titulo = "";
     /**
      * Atributo donde guardaremos el género del disco
      */
-    String genero;
+    String genero = "";
     /**
      * Atributo donde guardaremos la duración del disco
      */
-    int duracion;
+    int duracion = 0;
 
     //Constructor por defecto
     public Disco() {
@@ -92,7 +92,9 @@ public class Disco {
     }
 
     public void setDuracion(int duracion) {
-        this.duracion = duracion;
+       if (duracion > 0) {
+           this.duracion = duracion;
+       }
     }
 
 
