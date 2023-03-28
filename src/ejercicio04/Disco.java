@@ -4,27 +4,28 @@ package ejercicio04;
  * Clase donde se definirán los atributos y métodos de los objetos Disco
  */
 public class Disco {
+
     //Declaramos los atributos
     /**
      * Atributo donde guardaremos el código del disco
      */
-    String codigo = "LIBRE";
+    private String codigo = "LIBRE";
     /**
      * Atributo donde guardaremos el autor del disco
      */
-    String autor = "";
+    private String autor = "";
     /**
      * Atributo donde guardaremos el título del disco
      */
-    String titulo = "";
+    private String titulo = "";
     /**
      * Atributo donde guardaremos el género del disco
      */
-    String genero = "";
+    private String genero = "";
     /**
      * Atributo donde guardaremos la duración del disco
      */
-    int duracion = 0;
+    private int duracion = 0;
 
     //Constructor por defecto
     public Disco() {
