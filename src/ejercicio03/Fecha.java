@@ -9,15 +9,15 @@ public class Fecha {
     /**
      * Atributo donde guardaremos el dia del objeto fecha
      */
-    private int dia;
+    private int dia = 1;
     /**
      * Atributo donde guardaremos el mes del objeto fecha
      */
-    private int mes;
+    private int mes = 1;
     /**
      * Atributo donde guardaremos el año del objeto fecha
      */
-    private int anyo;
+    private int anyo = 1970;
 
     //Constructor por defecto
     public Fecha() {
@@ -25,8 +25,13 @@ public class Fecha {
 
     //Constructor con parámetros
     public Fecha(int dia, int mes, int anyo) {
-        this.dia = dia;
-        this.mes = mes;
+        if (dia >= 1 && dia <= 31) {
+            this.dia = dia;
+        }
+        if (mes >= 1 && mes <= 12) {
+            this.mes = mes;
+        }
+
         this.anyo = anyo;
     }
 
@@ -36,7 +41,9 @@ public class Fecha {
     }
 
     public void setDia(int dia) {
-        this.dia = dia;
+        if (dia >= 1 && dia <= 31) {
+            this.dia = dia;
+        }
     }
 
     public int getMes() {
@@ -44,7 +51,9 @@ public class Fecha {
     }
 
     public void setMes(int mes) {
-        this.mes = mes;
+        if (mes >= 1 && mes <= 12) {
+            this.mes = mes;
+        }
     }
 
     public int getAnyo() {
@@ -60,11 +69,11 @@ public class Fecha {
      *
      * @return true si el año es bisiesto y false si no lo es.
      */
-    public boolean esBisiesto(int year) {
+    public boolean esBisiesto() {
         boolean esBisiesto = false;
 
         //Si el año es divisible entre 4 y no es divisible entre 100 o es divisible entre 400, es bisiesto.
-        if ((year % 4 == 0) && (year % 100 != 0 || year % 400 == 0)) {
+        if ((this.anyo % 4 == 0) && (this.anyo % 100 != 0 || this.anyo % 400 == 0)) {
             esBisiesto = true;
         }
 
@@ -79,20 +88,19 @@ public class Fecha {
     public boolean fechaCorrecta() {
         boolean fechaCorrecta = false;
 
-
-        if (dia >= 1 && dia <= 31) {    //Si el dia es mayor que 0 y menor que 31
-            if (mes == 1 || mes == 3 || mes == 5 || mes == 7 || mes == 8    //Y si el mes es 1, 3, 5, 7, 8, 10 o 12
-                    || mes == 10 || mes == 12) {
-                fechaCorrecta = true;            //La fecha es correcta
-            } else if (mes == 4 || mes == 6 || mes == 9 || mes == 11) {   //Si el mes es 4, 6, 9 o 11
-                if (dia <= 30) {            //Y el dia es menor que 30
+        switch (mes) {
+            case 2 -> {                     //Si el mes es 2
+                //Si el año es bisiesto y el dia es menor que 29 o si el año no es bisiesto y el dia es menor que 28
+                if ((esBisiesto() && dia <= 29) || (!esBisiesto() && dia <= 28)) {
                     fechaCorrecta = true;   //La fecha es correcta
                 }
-            } else if (mes == 2) {          //Si el mes es 2
-                if (dia <= 28) {            //Y el dia es menor que 28
+            }
+            case 1, 3, 5, 7, 8, 10, 12 -> {
+                fechaCorrecta = true;       //Si el mes es 1, 3, 5, 7, 8, 10 o 12 la fecha es correcta
+            }
+            case 4, 6, 9, 11 -> {
+                if (dia <= 30) {            //Si el mes es 4, 6, 9 o 11 y el dia es menor que 30
                     fechaCorrecta = true;   //La fecha es correcta
-                } else if (dia == 29 && esBisiesto(this.anyo)) {    //Si el dia es 29 y el año es bisiesto
-                    fechaCorrecta = true;                           //La fecha es correcta
                 }
             }
         }
@@ -105,30 +113,35 @@ public class Fecha {
      * Precondición: la fecha introducida por parámetros debe ser correcta.
      * Método que cambiará la fecha introducida por parámetros para que muestre la del día siguiente.
      * Postcondición: la fecha que devuelva el método también debe ser correcta, es decir, debe existir.
-     *
-     * @param fecha : Objeto Fecha que vamos a crear.
      */
-    public void diaSiguiente(Fecha fecha) {
-        if (fecha.fechaCorrecta()) {
-            if (this.dia == 31 && this.mes == 12) {
-                setDia(1);
-                setMes(1);
-                this.anyo++;
-            } else if (this.dia == 31 && (this.mes == 1 || this.mes == 3 || this.mes == 5 || this.mes == 7 || this.mes == 8
-                    || this.mes == 10 || this.mes == 12)) {
-                setDia(1);
-                this.mes++;
-            } else if (this.dia == 30 && (this.mes == 4 || this.mes == 6 || this.mes == 9 || this.mes == 11)) {
-                setDia(1);
-                this.mes++;
-            } else if (this.dia == 28 && this.mes == 2 && !esBisiesto(this.anyo)) {
-                setDia(1);
-                this.mes++;
-            } else if (this.dia == 29 && this.mes == 2 && esBisiesto(this.anyo)) {
-                setDia(1);
-                this.mes++;
-            } else {
-                this.dia++;
+    public void diaSiguiente() {
+        dia++;
+        switch (mes) {
+            case 2 -> {                     //Si el mes es 2
+                //Si el año es bisiesto y el dia es menor que 29 o si el año no es bisiesto y el dia es menor que 28
+                if ((esBisiesto() && dia > 29) || (!esBisiesto() && dia > 28)) {
+                    dia = 1;
+                    mes++;
+                }
+            }
+            case 1, 3, 5, 7, 8, 10 -> {
+                if (dia > 31) {             //Si el mes es 1, 3, 5, 7, 8 o 10 y el dia es mayor que 31
+                    dia = 1;
+                    mes++;
+                }
+            }
+            case 4, 6, 9, 11 -> {
+                if (dia > 30) {            //Si el mes es 4, 6, 9 o 11 y el dia es menor que 30
+                    dia = 1;
+                    mes++;
+                }
+            }
+            case 12 -> {
+                if (dia > 31) {
+                    dia = 1;
+                    mes = 1;
+                    anyo++;
+                }
             }
         }
     }
@@ -141,16 +154,18 @@ public class Fecha {
     @Override
     public String toString() {
 
-        String fecha = dia + "-" + mes + "-" + anyo;
-
-        //Si el día o el mes son menores que 10, añadimos un 0 delante.
-        if (dia < 10 && mes < 10) {
-            fecha = "0" + dia + "-0" + mes + "-" + anyo;
-        }else if (dia < 10) {   //Si solo el día es menor que 10, añadimos un 0 solo delante del día.
-            fecha = "0" + dia + "-" + mes + "-" + anyo;
-        }else if (mes < 10) {   //Si solo el mes es menor que 10, añadimos un 0 solo delante del mes.
-            fecha = dia + "-0" + mes + "-" + anyo;
+        String fecha = "";
+        if (dia < 10) {
+            fecha += "0";
         }
+
+        fecha += dia + "-";
+
+        if (mes < 10) {
+            fecha += "0";
+        }
+
+        fecha += mes + "-" + anyo;
 
         return fecha;
     }
